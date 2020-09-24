@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
 
-
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -51,6 +50,7 @@ class _HomePageState extends State<HomePage> {
       imageStd: 127.5,
     );
     print("OUTPUT : ");
+
     print(output);
     setState(() {
       _loading = false;
@@ -101,20 +101,29 @@ class _HomePageState extends State<HomePage> {
                       Expanded(
                         flex: 2,
                         child: Container(
-                          child:
-                              _image == null ? Container() : Image.file(_image),
+                          child: _image == null
+                              ? Align(
+                                  alignment: Alignment(0, 0.6),
+                                  child: Text(
+                                    'Please Select an Image',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14),
+                                  ))
+                              : Image.file(_image),
                         ),
                       ),
                       Expanded(
                         child: _image == null
                             ? Container()
                             : _outputs != null
-                                ? Center(
+                                ? Align(
+                                    alignment: Alignment(0, -0.4),
                                     child: Text(
-                                      '${(_outputs[0]['confidence'] * 100).toInt()}% => ${_outputs[0]["label"]}',
+                                      '${_outputs[0]["label"].toUpperCase()} (${(_outputs[0]['confidence'] * 100).toInt()} %)',
                                       style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: 30,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.bold),
                                     ),
                                   )
