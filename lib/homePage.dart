@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_boom_menu/flutter_boom_menu.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
 
@@ -58,8 +59,9 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  pickImage() async {
-    var pickedImage = await _imagePicker.getImage(source: ImageSource.gallery);
+  pickImage(int val) async {
+    var pickedImage = await _imagePicker.getImage(
+        source: val == 1 ? ImageSource.camera : ImageSource.gallery);
     var image = File(pickedImage.path);
     if (image == null) return null;
     setState(() {
@@ -83,11 +85,32 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.blue,
-          child: Icon(Icons.send),
-          onPressed: pickImage,
-        ),
+        floatingActionButton: BoomMenu(
+            animatedIcon: AnimatedIcons.menu_close,
+            animatedIconTheme: IconThemeData(size: 22.0),
+            overlayColor: Colors.black,
+            overlayOpacity: 0.7,
+            animationSpeed: 0,
+            children: [
+              MenuItem(
+                child: Icon(Icons.camera, color: Colors.white),
+                title: "Camera",
+                titleColor: Colors.white,
+                subtitle: "Click Image from Camera",
+                subTitleColor: Colors.white,
+                backgroundColor: Colors.blue,
+                onTap: () => pickImage(1),
+              ),
+              MenuItem(
+                child: Icon(Icons.image, color: Colors.white),
+                title: "Gallery",
+                titleColor: Colors.white,
+                subtitle: "Pick Image from Gallery",
+                subTitleColor: Colors.white,
+                backgroundColor: Colors.blue,
+                onTap: () => pickImage(2),
+              ),
+            ]),
         body: Container(
           alignment: Alignment(0, 0),
           child: _loading
