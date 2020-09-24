@@ -33,8 +33,8 @@ class _HomePageState extends State<HomePage> {
     try {
       String res;
       res = await Tflite.loadModel(
-        model: 'assets/model_unquant.tflite',
-        labels: 'assets/labels.txt',
+        model: 'assets/mobilenet_v2_1.0_224.tflite',
+        labels: 'assets/labels_mobilenet_quant_v1_224.txt',
       );
       print(res);
     } on PlatformException {
