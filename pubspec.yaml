@@ -30,7 +30,6 @@ dependencies:
   cupertino_icons: ^0.1.3
   tflite: ^1.1.1
   image_picker: ^0.6.7+11
-  tflite_flutter_helper: ^0.1.2
 
 dev_dependencies:
   flutter_test:

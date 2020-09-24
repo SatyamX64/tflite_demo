@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
-import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -41,16 +41,6 @@ class _HomePageState extends State<HomePage> {
       print('Failed to load model.');
     }
   }
-
-  // preProcessImage(File image) {
-  //   ImageProcessor imageProcessor = ImageProcessorBuilder()
-  //       .add(ResizeOp(224, 224, ResizeMethod.NEAREST_NEIGHBOUR))
-  //       .build();
-  //   TensorImage tensorImage = TensorImage.fromFile(image);
-  //   tensorImage = imageProcessor.process(tensorImage);
-  //   File file = File().
-
-  // }
 
   classifyImage(File image) async {
     var output = await Tflite.runModelOnImage(
@@ -91,44 +81,49 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue,
-        child: Icon(Icons.send),
-        onPressed: pickImage,
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          _loading
-              ? Container(
-                  height: 300,
-                  width: 300,
+    return SafeArea(
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.blue,
+          child: Icon(Icons.send),
+          onPressed: pickImage,
+        ),
+        body: Container(
+          alignment: Alignment(0, 0),
+          child: _loading
+              ? CircularProgressIndicator(
+                  backgroundColor: Colors.blue,
                 )
-              : Container(
-                  margin: EdgeInsets.all(20),
-                  width: MediaQuery.of(context).size.width,
+              : Padding(
+                  padding: EdgeInsets.all(20),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      _image == null ? Container() : Image.file(_image),
-                      SizedBox(
-                        height: 20,
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          child:
+                              _image == null ? Container() : Image.file(_image),
+                        ),
                       ),
-                      _image == null
-                          ? Container()
-                          : _outputs != null
-                              ? Text(
-                                  '${(_outputs[0]['confidence'] * 100).toInt()}% => ${_outputs[0]["label"]}',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20),
-                                )
-                              : Container(child: Text(""))
+                      Expanded(
+                        child: _image == null
+                            ? Container()
+                            : _outputs != null
+                                ? Center(
+                                    child: Text(
+                                      '${(_outputs[0]['confidence'] * 100).toInt()}% => ${_outputs[0]["label"]}',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  )
+                                : Container(),
+                      )
                     ],
                   ),
                 ),
-        ],
+        ),
       ),
     );
   }
